@@ -4,11 +4,14 @@ const Usuario = require('../models/user')
 const bcrypt = require('bcrypt')
 const _ = require('underscore')
 
+const {verificaToken,verificarAdmin_Role} = require('../middlewares/autenticacion')
+
+
 //EL APP SE DECLARA EL METODO DEL EXPRESS
 const app = express()
 
 //POST MUESTRA DATOS O LISTAR DATOS
-app.get('/user', function(req, res) {
+app.get('/usuario', verificaToken, (req, res)=>{
 
     //sIGNAR UNA NUEVA VARIABLE QUE PUEDA REALIZAR UN FILTRO OPCIONAL ES DECIR
     //desde el usuario quiere buscar un nombre or sino muestre los n de datos
@@ -61,7 +64,7 @@ app.get('/user', function(req, res) {
 })
 
 //POST UTILIZAN SOLO REGISTROS
-app.post('/user', function(req, res) {
+app.post('/usuario', [verificaToken,verificarAdmin_Role],(req, res)=> {
 
 
 
@@ -77,7 +80,7 @@ app.post('/user', function(req, res) {
         telefono: body.telefono,
         edad: body.edad,
         role: body.role
-    })
+    }) 
 
     // //CUANDO LA CONECCION DEL MONGO NO SE CONECTA ARROJARA UN MENSAJE DE ERROR EN LA CONSOLA
     usuario.save((err, usuarioDB) => {
@@ -96,10 +99,10 @@ app.post('/user', function(req, res) {
 })
 
 //PUT UTILIZAN DE ACTUALIZAR LOS REGISTROS 123
-app.put('/user/:id', function(req, res) {
+app.put('/usuario/:id',[verificaToken,verificarAdmin_Role], (req, res)=> {
     let id = req.params.id
     let body = req.body
-        // let body = _.pick(req.body, ['nombre', 'apellido', 'email', 'password', 'repitaPassword', 'img', 'edad', 'telefono', 'estados']);
+    // let body = _.pick(req.body, ['nombre', 'apellido', 'email', 'password', 'repitaPassword', 'img', 'edad', 'telefono', 'estados']);
 
     Usuario.findByIdAndUpdate(id, body, (err, usuarioDB) => {
 
@@ -108,9 +111,9 @@ app.put('/user/:id', function(req, res) {
                 ok: false,
                 err
             })
-        }
+        }  
 
-        res.json({
+        res.json({  
             ok: true,
             usuario: usuarioDB
         })
