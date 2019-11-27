@@ -39,7 +39,7 @@ let usuarioSchema = new Schema({
 
     telefono: {
         type: String,
-        required: [true, 'El telefono es necesario']
+        required: false
     },
 
     img: {
@@ -62,6 +62,10 @@ let usuarioSchema = new Schema({
         default: true
 
     },
+    google:{
+        type:Boolean,
+        default: false
+    }
 });
 
 //ESTA FUNCION NO MUESTRA EL ATRIBUTO PASSWORD PARA TENER UNA MAYOR SGURIDAD DE LA APLICACION
